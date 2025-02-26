@@ -22,21 +22,24 @@ public class GameplayManager : MonoBehaviour
     public int indexLevel = 1;
     public LevelManager levelManager;
     public UIManager uIManager;
+    public CalculateSoundManager calculateSoundManager;
     void Start()
     {
         levelManager = LevelManager.instance;
         uIManager = UIManager.instance;
+        calculateSoundManager = CalculateSoundManager.instance;
         levelManager.LoadLevel(indexLevel);
         requiremntResult.text = levelManager.currentLevel.requiremntResult.ToString();
         turnLeft.text = levelManager.currentLevel.turnCount.ToString();
         turnCount = levelManager.currentLevel.turnCount;
-         uIManager.nextLevel.onClick.AddListener(NextLevel);
-         uIManager.retry.onClick.AddListener(Retry);
+        uIManager.nextLevel.onClick.AddListener(NextLevel);
+        uIManager.retry.onClick.AddListener(Retry);
 
     }
     public void OnNumberPressed(string number)
     {
         if (turnCount <= 0) return;
+        calculateSoundManager.PlaySound(CalculateSoundName.CLICK, 0.3f);
         currentExpression += number;
         turnCount--;
         UpdateDisplay();
@@ -71,7 +74,7 @@ public class GameplayManager : MonoBehaviour
             currentExpression += op;
             turnCount--;
         }
-
+        calculateSoundManager.PlaySound(CalculateSoundName.CLICK, 0.3f);
         UpdateDisplay();
 
         if (turnCount == 0)
@@ -127,11 +130,6 @@ public class GameplayManager : MonoBehaviour
         return expression;
     }
     #endregion
-    // private bool IsLasstCharOperator()
-    // {
-    //     char lastChar = currentExpression[currentExpression.Length - 1];
-    //     return lastChar == '+' || lastChar == '-' || lastChar == '*' || lastChar == '/' || lastChar == '^' || lastChar == '!';
-    // }
     private void UpdateDisplay()
     {
         display.text = string.IsNullOrEmpty(currentExpression) ? "0" : currentExpression;
@@ -154,14 +152,15 @@ public class GameplayManager : MonoBehaviour
                 if (double.TryParse(result.ToString(), out double finalResult))
                 {
                     display.text += "=" + finalResult.ToString();
-                    Debug.Log("Final result" + finalResult);
                     if (finalResult == levelManager.currentLevel.requiremntResult)
                     {
-                         uIManager.SetActiveWinUI();
+                        uIManager.SetActiveWinUI();
+                        calculateSoundManager.PlaySound(CalculateSoundName.WIN,0.2f);
                     }
                     else
                     {
-                         uIManager.SetActiveLoseUI();
+                        uIManager.SetActiveLoseUI();
+                        calculateSoundManager.PlaySound(CalculateSoundName.LOSE,0.2f);
                     }
                 }
                 else
@@ -171,8 +170,9 @@ public class GameplayManager : MonoBehaviour
             }
             catch (Exception)
             {
+                calculateSoundManager.PlaySound(CalculateSoundName.LOSE,0.2f);
                 display.text = "No Result";
-                 uIManager.SetActiveLoseUI();
+                uIManager.SetActiveLoseUI();
             }
         }
     }
@@ -197,8 +197,8 @@ public class GameplayManager : MonoBehaviour
         Debug.Log(levelManager.currentLevel.requiremntResult);
         requiremntResult.text = levelManager.currentLevel.requiremntResult.ToString();
         turnLeft.text = levelManager.currentLevel.turnCount.ToString();
-         uIManager.SetInteractable();
-         uIManager.ResetActive();
+        uIManager.SetInteractable();
+        uIManager.ResetActive();
     }
     public void Retry()
     {
@@ -208,7 +208,7 @@ public class GameplayManager : MonoBehaviour
         turnCount = levelManager.currentLevel.turnCount;
         requiremntResult.text = levelManager.currentLevel.requiremntResult.ToString();
         turnLeft.text = levelManager.currentLevel.turnCount.ToString();
-         uIManager.SetInteractable();
-         uIManager.ResetActive();
+        uIManager.SetInteractable();
+        uIManager.ResetActive();
     }
 }
