@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.UI;
@@ -25,6 +26,7 @@ public class UIManager : MonoBehaviour
     public Button nextLevel;
     public Button retry;
     public Button hintButton;
+    public TextMeshProUGUI levelTitle;
     public void SetActiveWinUI()
     {
         winLoseUI.SetActive(true);

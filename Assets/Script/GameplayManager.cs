@@ -35,7 +35,7 @@ public class GameplayManager : MonoBehaviour
         turnCount = levelManager.currentLevel.turnCount;
         uIManager.nextLevel.onClick.AddListener(NextLevel);
         uIManager.retry.onClick.AddListener(Retry);
-
+        uIManager.levelTitle.text = levelManager.currentLevel.name;
     }
     public void OnNumberPressed(string number)
     {
@@ -207,6 +207,7 @@ public class GameplayManager : MonoBehaviour
         requiremntResult.text = levelManager.currentLevel.requiremntResult.ToString();
         turnLeft.text = levelManager.currentLevel.turnCount.ToString();
         buttonClickCounts = new Dictionary<Button, int>();
+        uIManager.levelTitle.text = levelManager.currentLevel.name;
         uIManager.SetInteractable();
         uIManager.ResetActive();
     }
