@@ -8,6 +8,7 @@ public class LevelSO : ScriptableObject {
     public int requiremntResult;
     public int turnCount;
     public bool oneTimeClick;
+    public int clickCount;
     
 }
 

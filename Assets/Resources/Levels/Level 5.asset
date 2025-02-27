@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Level 5
   m_EditorClassIdentifier: 
   requiremntResult: 12
-  turnCount: 7
-  oneTimeClick: 0
+  turnCount: 4
+  oneTimeClick: 1
+  clickCount: 1

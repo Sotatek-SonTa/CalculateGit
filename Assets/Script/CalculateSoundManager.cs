@@ -46,4 +46,5 @@ public enum CalculateSoundName
     WIN,
     LOSE,
     CLICK,
+    RETRY,
 }

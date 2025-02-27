@@ -596,6 +596,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bba433e2786347645b30172c94a6751e, type: 3}
   - {fileID: 8300000, guid: bb70351c633eb374abf615f30137ab48, type: 3}
   - {fileID: 8300000, guid: d87e3a8e37576d349a9ab5c3af78c101, type: 3}
+  - {fileID: 8300000, guid: ee5956516707e604eb68b57518809702, type: 3}
   bgmSound: {fileID: 841949615}
   sfxSound: {fileID: 1459888040}
 --- !u!1 &158350145
@@ -1978,7 +1979,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '0
+  m_text: 'Retry
 
 '
   m_isRightToLeft: 0
@@ -8608,6 +8609,7 @@ MonoBehaviour:
   - {fileID: 2093197013}
   - {fileID: 694769311}
   - {fileID: 1909280014}
+  - {fileID: 205119891}
   nextLevel: {fileID: 1891598683}
   retry: {fileID: 2092681715}
 --- !u!1 &1993901107
@@ -9012,7 +9014,7 @@ GameObject:
   - component: {fileID: 2093197014}
   - component: {fileID: 2093197013}
   m_Layer: 0
-  m_Name: 0
+  m_Name: Retry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9084,8 +9086,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: GameplayManager, Assembly-CSharp
-        m_MethodName: OnNumberPressed
-        m_Mode: 5
+        m_MethodName: Retry
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

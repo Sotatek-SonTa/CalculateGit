@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8550b559152722447853fa5f3e79acac, type: 3}
   m_Name: Level 6
   m_EditorClassIdentifier: 
-  requiremntResult: 225
-  turnCount: 5
-  oneTimeClick: 0
+  requiremntResult: 45
+  turnCount: 6
+  oneTimeClick: 1
+  clickCount: 1

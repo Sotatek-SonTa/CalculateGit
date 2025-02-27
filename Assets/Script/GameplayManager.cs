@@ -23,6 +23,7 @@ public class GameplayManager : MonoBehaviour
     public LevelManager levelManager;
     public UIManager uIManager;
     public CalculateSoundManager calculateSoundManager;
+    private Dictionary<Button, int> buttonClickCounts = new Dictionary<Button, int>();
     void Start()
     {
         levelManager = LevelManager.instance;
@@ -47,11 +48,19 @@ public class GameplayManager : MonoBehaviour
         {
             FinalResult();
         }
-        if (levelManager.currentLevel.oneTimeClick)
-        {
-            Button pressedButton = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject?.GetComponent<Button>();
-            pressedButton.interactable = false;
-        }
+         Button pressedButton = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject?.GetComponent<Button>();
+         if (pressedButton != null)
+         {
+             if (!buttonClickCounts.ContainsKey(pressedButton))
+             {
+                 buttonClickCounts[pressedButton] = 0;
+             }
+             buttonClickCounts[pressedButton]++;
+             if (buttonClickCounts[pressedButton] == levelManager.currentLevel.clickCount)
+             {
+                 pressedButton.interactable = false;
+             }
+         }
     }
     public void OnOperation(string op)
     {
@@ -155,12 +164,12 @@ public class GameplayManager : MonoBehaviour
                     if (finalResult == levelManager.currentLevel.requiremntResult)
                     {
                         uIManager.SetActiveWinUI();
-                        calculateSoundManager.PlaySound(CalculateSoundName.WIN,0.2f);
+                        calculateSoundManager.PlaySound(CalculateSoundName.WIN, 0.2f);
                     }
                     else
                     {
                         uIManager.SetActiveLoseUI();
-                        calculateSoundManager.PlaySound(CalculateSoundName.LOSE,0.2f);
+                        calculateSoundManager.PlaySound(CalculateSoundName.LOSE, 0.2f);
                     }
                 }
                 else
@@ -170,7 +179,7 @@ public class GameplayManager : MonoBehaviour
             }
             catch (Exception)
             {
-                calculateSoundManager.PlaySound(CalculateSoundName.LOSE,0.2f);
+                calculateSoundManager.PlaySound(CalculateSoundName.LOSE, 0.2f);
                 display.text = "No Result";
                 uIManager.SetActiveLoseUI();
             }
@@ -197,6 +206,7 @@ public class GameplayManager : MonoBehaviour
         Debug.Log(levelManager.currentLevel.requiremntResult);
         requiremntResult.text = levelManager.currentLevel.requiremntResult.ToString();
         turnLeft.text = levelManager.currentLevel.turnCount.ToString();
+        buttonClickCounts = new Dictionary<Button, int>();
         uIManager.SetInteractable();
         uIManager.ResetActive();
     }
@@ -208,6 +218,8 @@ public class GameplayManager : MonoBehaviour
         turnCount = levelManager.currentLevel.turnCount;
         requiremntResult.text = levelManager.currentLevel.requiremntResult.ToString();
         turnLeft.text = levelManager.currentLevel.turnCount.ToString();
+        buttonClickCounts = new Dictionary<Button, int>();
+        calculateSoundManager.PlaySound(CalculateSoundName.RETRY, 0.2f);
         uIManager.SetInteractable();
         uIManager.ResetActive();
     }
