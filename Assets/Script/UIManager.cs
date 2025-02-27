@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour
     public List<Button> listButton;
     public Button nextLevel;
     public Button retry;
+    public Button hintButton;
     public void SetActiveWinUI()
     {
         winLoseUI.SetActive(true);
