@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   requiremntResult: 630
   turnCount: 9
-  oneTimeClick: 0
   clickCount: 3
+  operationClickCount: 2
   hintFormula: '5^3!/5^2+5 '
   hintCount: 3

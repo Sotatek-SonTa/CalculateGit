@@ -24,6 +24,7 @@ namespace CalculateGameplayManager
         public UIManager uIManager;
         public CalculateSoundManager calculateSoundManager;
         private Dictionary<Button, int> buttonClickCounts = new Dictionary<Button, int>();
+        private Dictionary<Button, int> operationClikCount = new Dictionary<Button, int>();
         private int hintIndex = 0;
         private int hintClickCount = 0;
         void Start()
@@ -53,19 +54,7 @@ namespace CalculateGameplayManager
             {
                 FinalResult();
             }
-            Button pressedButton = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject?.GetComponent<Button>();
-            if (pressedButton != null)
-            {
-                if (!buttonClickCounts.ContainsKey(pressedButton))
-                {
-                    buttonClickCounts[pressedButton] = 0;
-                }
-                buttonClickCounts[pressedButton]++;
-                if (buttonClickCounts[pressedButton] == levelManager.currentLevel.clickCount)
-                {
-                    pressedButton.interactable = false;
-                }
-            }
+            CountClickTime(buttonClickCounts, levelManager.currentLevel.clickCount);
         }
         public void OnOperation(string op)
         {
@@ -95,12 +84,25 @@ namespace CalculateGameplayManager
             {
                 FinalResult();
             }
-            if (levelManager.currentLevel.oneTimeClick)
+            CountClickTime(operationClikCount, levelManager.currentLevel.operationClickCount);
+        }
+        public void CountClickTime(Dictionary<Button, int> saveClick, int clickCount)
+        {
+            Button pressedButton = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject?.GetComponent<Button>();
+            if (pressedButton != null)
             {
-                Button pressedButton = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject?.GetComponent<Button>();
-                pressedButton.interactable = false;
+                if (!saveClick.ContainsKey(pressedButton))
+                {
+                    saveClick[pressedButton] = 0;
+                }
+                saveClick[pressedButton]++;
+                if (saveClick[pressedButton] == clickCount)
+                {
+                    pressedButton.interactable = false;
+                }
             }
         }
+
         #region Special Expression
         private string SolvePowerExpression(string expression)
         {
@@ -213,14 +215,10 @@ namespace CalculateGameplayManager
         public void ResetLevel()
         {
             levelManager.LoadLevel(indexLevel);
-            currentExpression = "";
-            display.text = currentExpression.ToString();
-            turnCount = levelManager.currentLevel.turnCount;
-            requiremntResult.text = levelManager.currentLevel.requiremntResult.ToString();
-            turnLeft.text = levelManager.currentLevel.turnCount.ToString();
-            buttonClickCounts = new Dictionary<Button, int>();
             calculateSoundManager.PlaySound(CalculateSoundName.RETRY, 0.2f);
+            SetUpUI();
             ResetHint();
+            ResetDictionary();
             uIManager.SetInteractable();
             uIManager.ResetActive();
         }
@@ -243,7 +241,20 @@ namespace CalculateGameplayManager
             hintIndex = 0;
             uIManager.ResetHintDisPlay();
         }
-
+        private void ResetDictionary()
+        {
+            buttonClickCounts = new Dictionary<Button, int>();
+            operationClikCount = new Dictionary<Button, int>();
+        }
+        private void SetUpUI()
+        {
+            currentExpression = "";
+            display.text = currentExpression.ToString();
+            turnCount = levelManager.currentLevel.turnCount;
+            requiremntResult.text = levelManager.currentLevel.requiremntResult.ToString();
+            turnLeft.text = levelManager.currentLevel.turnCount.ToString();
+            uIManager.levelTitle.text = levelManager.currentLevel.name;
+        }
     }
 }
 

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   requiremntResult: 576
   turnCount: 8
-  oneTimeClick: 0
   clickCount: 1
+  operationClickCount: 3
   hintFormula: 6!-5!-4!
   hintCount: 2

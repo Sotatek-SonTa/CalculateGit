@@ -7,8 +7,8 @@ using UnityEngine;
 public class LevelSO : ScriptableObject {
     public int requiremntResult;
     public int turnCount;
-    public bool oneTimeClick;
     public int clickCount;
+    public int operationClickCount;
     public string hintFormula;
     public int hintCount;
     
