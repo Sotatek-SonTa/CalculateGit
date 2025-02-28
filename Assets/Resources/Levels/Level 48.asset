@@ -16,3 +16,5 @@ MonoBehaviour:
   turnCount: 11
   oneTimeClick: 0
   clickCount: 3
+  hintFormula: '5^2-7^2+3^2 '
+  hintCount: 2

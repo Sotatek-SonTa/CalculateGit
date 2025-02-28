@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Level 3
   m_EditorClassIdentifier: 
   requiremntResult: 2
-  turnCount: 2
+  turnCount: 3
   oneTimeClick: 1
   clickCount: 1
+  hintFormula: 3-1
+  hintCount: 1

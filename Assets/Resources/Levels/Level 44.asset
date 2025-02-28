@@ -16,3 +16,5 @@ MonoBehaviour:
   turnCount: 8
   oneTimeClick: 0
   clickCount: 3
+  hintFormula: '4!*4+4^2 '
+  hintCount: 2

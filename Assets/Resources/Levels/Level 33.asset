@@ -16,3 +16,5 @@ MonoBehaviour:
   turnCount: 9
   oneTimeClick: 0
   clickCount: 3
+  hintFormula: '5^3!/5^2+5 '
+  hintCount: 3

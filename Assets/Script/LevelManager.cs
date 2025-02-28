@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+namespace CalculateLevelManager
+{
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance { get; private set; }
@@ -23,3 +25,5 @@ public class LevelManager : MonoBehaviour
         currentLevel = Resources.Load<LevelSO>($"Levels/Level {index}");
     }
 }
+}
+

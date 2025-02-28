@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Net.WebSockets;
 using UnityEngine;
 
+namespace CalculateGameSoundManager
+{
 public class CalculateSoundManager : MonoBehaviour
 {
     public static CalculateSoundManager instance { get; private set; }
@@ -48,3 +50,5 @@ public enum CalculateSoundName
     CLICK,
     RETRY,
 }
+}
+

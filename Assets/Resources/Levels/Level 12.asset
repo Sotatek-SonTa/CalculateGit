@@ -16,3 +16,5 @@ MonoBehaviour:
   turnCount: 6
   oneTimeClick: 1
   clickCount: 2
+  hintFormula: 7!/7+3
+  hintCount: 2

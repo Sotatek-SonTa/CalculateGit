@@ -9,6 +9,8 @@ public class LevelSO : ScriptableObject {
     public int turnCount;
     public bool oneTimeClick;
     public int clickCount;
+    public string hintFormula;
+    public int hintCount;
     
 }
 
