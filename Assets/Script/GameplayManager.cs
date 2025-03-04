@@ -29,16 +29,12 @@ namespace CalculateGameplayManager
         private int hintClickCount = 0;
         void Start()
         {
-            levelManager = LevelManager.instance;
-            uIManager = UIManager.instance;
-            calculateSoundManager = CalculateSoundManager.instance;
+            LoadManager();
             levelManager.LoadLevel(indexLevel);
             requiremntResult.text = levelManager.currentLevel.requiremntResult.ToString();
             turnLeft.text = levelManager.currentLevel.turnCount.ToString();
             turnCount = levelManager.currentLevel.turnCount;
-            uIManager.nextLevel.onClick.AddListener(NextLevel);
-            uIManager.retry.onClick.AddListener(Retry);
-            uIManager.hintButton.onClick.AddListener(ShowNextHintCharcater);
+            AddListener();
             uIManager.levelTitle.text = levelManager.currentLevel.name;
             hintClickCount = levelManager.currentLevel.hintCount;
             uIManager.hintCount.text = hintClickCount.ToString();
@@ -55,6 +51,18 @@ namespace CalculateGameplayManager
                 FinalResult();
             }
             CountClickTime(buttonClickCounts, levelManager.currentLevel.clickCount);
+        }
+        void LoadManager()
+        {
+            levelManager = LevelManager.instance;
+            uIManager = UIManager.instance;
+            calculateSoundManager = CalculateSoundManager.instance;
+        }
+        void AddListener()
+        {
+            uIManager.nextLevel.onClick.AddListener(NextLevel);
+            uIManager.retry.onClick.AddListener(Retry);
+            uIManager.hintButton.onClick.AddListener(ShowNextHintCharcater);
         }
         public void OnOperation(string op)
         {
