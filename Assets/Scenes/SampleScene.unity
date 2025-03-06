@@ -156,7 +156,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 18.299988, y: 319}
+  m_AnchoredPosition: {x: 18.300049, y: 319}
   m_SizeDelta: {x: -287.6, y: -1809.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &49290237
@@ -282,7 +282,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: CalculateGameplayManager.GameplayManager, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnOperation
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -684,7 +684,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: CalculateGameplayManager.GameplayManager, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnOperation
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -767,7 +767,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0.000061035156, y: -0.000061035156}
+  m_AnchoredPosition: {x: 0, y: -0.000061035156}
   m_SizeDelta: {x: 329.65002, y: 305.12}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &182408155
@@ -1160,7 +1160,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: CalculateGameplayManager.GameplayManager, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnOperation
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1338,7 +1338,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: CalculateGameplayManager.GameplayManager, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnNumberPressed
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1874,7 +1874,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: CalculateGameplayManager.GameplayManager, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnNumberPressed
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2974,7 +2974,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: CalculateGameplayManager.GameplayManager, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnOperation
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3107,7 +3107,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: CalculateGameplayManager.GameplayManager, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnOperation
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3316,7 +3316,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: CalculateGameplayManager.GameplayManager, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnNumberPressed
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3585,7 +3585,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: CalculateGameplayManager.GameplayManager, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnNumberPressed
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3718,7 +3718,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: CalculateGameplayManager.GameplayManager, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnNumberPressed
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3936,10 +3936,15 @@ MonoBehaviour:
   turnLeft: {fileID: 1602476434}
   turnCount: 6
   display: {fileID: 831291571}
+  currentExpression: 
   indexLevel: 1
   levelManager: {fileID: 0}
   uIManager: {fileID: 0}
   calculateSoundManager: {fileID: 0}
+  formulaSegments: []
+  parentTransform: {fileID: 1848573462}
+  textPrefab: {fileID: 2930973202800040581, guid: 10a1c25e7c21f3b4ebe2b3acca3b5eb0, type: 3}
+  generatedTexts: []
 --- !u!1 &773063454
 GameObject:
   m_ObjectHideFlags: 0
@@ -4318,7 +4323,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &831291570
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4335,8 +4340,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -230}
-  m_SizeDelta: {x: 1440, y: 486}
+  m_AnchoredPosition: {x: 0.0022316, y: -219.76}
+  m_SizeDelta: {x: 1548.4, y: 465.52}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &831291571
 MonoBehaviour:
@@ -4866,7 +4871,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: CalculateGameplayManager.GameplayManager, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnNumberPressed
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5608,7 +5613,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: CalculateGameplayManager.GameplayManager, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnNumberPressed
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5982,7 +5987,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: CalculateGameplayManager.GameplayManager, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnNumberPressed
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7563,7 +7568,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: CalculateGameplayManager.GameplayManager, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnNumberPressed
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7645,7 +7650,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.7313514}
   m_AnchorMax: {x: 1, y: 0.8344325}
-  m_AnchoredPosition: {x: 0, y: 0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0.000061035}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1602476432
@@ -8353,7 +8358,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 18.299988, y: 319}
+  m_AnchoredPosition: {x: 18.300049, y: 319}
   m_SizeDelta: {x: -287.6, y: -1809.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1729613978
@@ -8673,6 +8678,7 @@ GameObject:
   - component: {fileID: 1848573462}
   - component: {fileID: 1848573464}
   - component: {fileID: 1848573463}
+  - component: {fileID: 1848573465}
   m_Layer: 0
   m_Name: Result
   m_TagString: Untagged
@@ -8738,6 +8744,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1848573461}
   m_CullTransparentMesh: 1
+--- !u!114 &1848573465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1848573461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: 20
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 1
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &1879194593
 GameObject:
   m_ObjectHideFlags: 0
@@ -9214,7 +9246,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771241572}
         m_TargetAssemblyTypeName: CalculateGameplayManager.GameplayManager, Assembly-CSharp
-        m_MethodName: OnButtonClick
+        m_MethodName: OnOperation
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -18,7 +18,7 @@ namespace CalculateGameplayManager
         [SerializeField] int turnCount;
         [Header("Input")]
         [SerializeField] private TextMeshProUGUI display;
-        private string currentExpression;
+        [SerializeField] private string currentExpression;
         public int indexLevel = 1;
         public LevelManager levelManager;
         public UIManager uIManager;
@@ -27,30 +27,24 @@ namespace CalculateGameplayManager
         private Dictionary<Button, int> operationClikCount = new Dictionary<Button, int>();
         private int hintIndex = 0;
         private int hintClickCount = 0;
+        private int currentReplaceIndex = 0;
+        private List<int> hiddenIndices = new List<int>();
+        [SerializeField] private List<string> formulaSegments;
+        [SerializeField] private Transform parentTransform;
+        [SerializeField] private TextMeshProUGUI textPrefab;
+        [SerializeField] private List<TextMeshProUGUI> generatedTexts;
         void Start()
         {
             LoadManager();
             levelManager.LoadLevel(indexLevel);
             requiremntResult.text = levelManager.currentLevel.requiremntResult.ToString();
-            turnLeft.text = levelManager.currentLevel.turnCount.ToString();
-            turnCount = levelManager.currentLevel.turnCount;
             AddListener();
             uIManager.levelTitle.text = levelManager.currentLevel.name;
             hintClickCount = levelManager.currentLevel.hintCount;
             uIManager.hintCount.text = hintClickCount.ToString();
-        }
-        public void OnNumberPressed(string number)
-        {
-            if (turnCount <= 0) return;
-            calculateSoundManager.PlaySound(CalculateSoundName.CLICK, 0.3f);
-            currentExpression += number;
-            turnCount--;
-            UpdateDisplay();
-            if (turnCount == 0)
-            {
-                FinalResult();
-            }
-            CountClickTime(buttonClickCounts, levelManager.currentLevel.clickCount);
+            turnCount = levelManager.currentLevel.turnCount;
+            GenerateTextFromHint(levelManager.currentLevel.hintFormula);
+            turnLeft.text = turnCount.ToString();
         }
         void LoadManager()
         {
@@ -64,30 +58,33 @@ namespace CalculateGameplayManager
             uIManager.retry.onClick.AddListener(Retry);
             uIManager.hintButton.onClick.AddListener(ShowNextHintCharcater);
         }
+        public void OnNumberPressed(string number)
+        {
+            if (turnCount <= 0) return;
+            int index = formulaSegments.IndexOf("<sprite name=\"blank\">");
+            if (index == -1) return;
+            calculateSoundManager.PlaySound(CalculateSoundName.CLICK, 0.3f);
+            formulaSegments[index] = number;
+            generatedTexts[index].text = number;
+            turnCount--;
+            UpdateDisplay();
+            if (turnCount == 0)
+            {
+                FinalResult();
+            }
+            CountClickTime(buttonClickCounts, levelManager.currentLevel.clickCount);
+        }
+
         public void OnOperation(string op)
         {
             if (turnCount <= 0) return;
-            if (string.IsNullOrEmpty(currentExpression))
-            {
-                if (op == "√")
-                {
-                    currentExpression = "√";
-                    turnCount--;
-                }
-                else if (op == "-")
-                {
-                    currentExpression = "-";
-                    turnCount--;
-                }
-            }
-            else
-            {
-                currentExpression += op;
-                turnCount--;
-            }
+            int index = formulaSegments.IndexOf("<sprite name=\"blank\">");
+            if (index == -1) return;
             calculateSoundManager.PlaySound(CalculateSoundName.CLICK, 0.3f);
+            formulaSegments[index] = op;
+            generatedTexts[index].text = op;
+            turnCount--;
             UpdateDisplay();
-
             if (turnCount == 0)
             {
                 FinalResult();
@@ -110,7 +107,6 @@ namespace CalculateGameplayManager
                 }
             }
         }
-
         #region Special Expression
         private string SolvePowerExpression(string expression)
         {
@@ -156,26 +152,20 @@ namespace CalculateGameplayManager
         #endregion
         private void UpdateDisplay()
         {
-            display.text = string.IsNullOrEmpty(currentExpression) ? "0" : currentExpression;
             turnLeft.text = turnCount.ToString();
         }
         public void FinalResult()
         {
+            currentExpression = string.Join("", formulaSegments);
             if (!string.IsNullOrEmpty(currentExpression))
             {
                 try
                 {
-                    string processedExpression = SolveFactorialExpression(currentExpression);
-                    processedExpression = SolvePowerExpression(processedExpression);
-                    processedExpression = SolveSquareRootExpression(processedExpression);
-
-
+                    string processedExpression = SolvePowerExpression(SolveFactorialExpression(currentExpression));
                     object result = new System.Data.DataTable().Compute(processedExpression, null);
-
-
                     if (double.TryParse(result.ToString(), out double finalResult))
                     {
-                        display.text += "=" + finalResult.ToString();
+                        GenerateTextWithResult(currentExpression, finalResult);
                         if (finalResult == levelManager.currentLevel.requiremntResult)
                         {
                             uIManager.SetActiveWinUI();
@@ -223,6 +213,8 @@ namespace CalculateGameplayManager
         public void ResetLevel()
         {
             levelManager.LoadLevel(indexLevel);
+            turnCount = levelManager.currentLevel.turnCount;
+            GenerateTextFromHint(levelManager.currentLevel.hintFormula);
             calculateSoundManager.PlaySound(CalculateSoundName.RETRY, 0.2f);
             SetUpUI();
             ResetHint();
@@ -258,10 +250,80 @@ namespace CalculateGameplayManager
         {
             currentExpression = "";
             display.text = currentExpression.ToString();
-            turnCount = levelManager.currentLevel.turnCount;
             requiremntResult.text = levelManager.currentLevel.requiremntResult.ToString();
-            turnLeft.text = levelManager.currentLevel.turnCount.ToString();
+            turnLeft.text = turnCount.ToString();
             uIManager.levelTitle.text = levelManager.currentLevel.name;
+        }
+        public void GenerateTextFromHint(string hintFormula)
+        {
+            foreach (var text in generatedTexts)
+            {
+                Destroy(text.gameObject);
+            }
+            generatedTexts.Clear();
+            formulaSegments.Clear();
+            System.Random random = new System.Random();
+            int hideCount = 0;
+            int visblaeOperators = 0;
+            for (int i = 0; i < hintFormula.Length; i++)
+            {
+                char c = hintFormula[i];
+                GameObject newTextObject = Instantiate(textPrefab.gameObject, parentTransform);
+                TextMeshProUGUI newText = newTextObject.GetComponent<TextMeshProUGUI>();
+
+                if (char.IsDigit(c))
+                {
+                    newText.text = "<sprite name=\"blank\">";
+                }
+                else if ("+-*/^!".Contains(c))
+                {
+                    if (hideCount < 2)
+                    {
+                        newText.text = "<sprite name=\"blank\">";
+                        hideCount++;
+                    }
+                    else
+                    {
+                        newText.text = c.ToString();
+                        visblaeOperators++;
+                    }
+                }
+                else
+                {
+                    newText.text = c.ToString();
+                }
+                formulaSegments.Add(newText.text);
+                generatedTexts.Add(newText);
+            }
+            turnCount-= visblaeOperators;
+        }
+        public void GenerateTextWithResult(string expression, double result)
+        {
+            foreach (var item in generatedTexts)
+            {
+                Destroy(item.gameObject);
+            }
+            generatedTexts.Clear();
+            formulaSegments.Clear();
+            foreach (char c in expression)
+            {
+                GameObject newTextObject = Instantiate(textPrefab.gameObject, parentTransform);
+                TextMeshProUGUI newText = newTextObject.GetComponent<TextMeshProUGUI>();
+                newText.text = c.ToString();
+                generatedTexts.Add(newText);
+                formulaSegments.Add(newText.text);
+            }
+            GameObject equalTextObject = Instantiate(textPrefab.gameObject, parentTransform);
+            TextMeshProUGUI equalText = equalTextObject.GetComponent<TextMeshProUGUI>();
+            equalText.text = "=";
+            generatedTexts.Add(equalText);
+            formulaSegments.Add(equalText.text);
+
+            GameObject resultTextObject = Instantiate(textPrefab.gameObject, parentTransform);
+            TextMeshProUGUI resultText = resultTextObject.GetComponent<TextMeshProUGUI>();
+            resultText.text = result.ToString();
+            generatedTexts.Add(resultText);
+            formulaSegments.Add(resultText.text);
         }
     }
 }

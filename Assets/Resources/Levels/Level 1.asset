@@ -16,5 +16,5 @@ MonoBehaviour:
   turnCount: 3
   clickCount: 1
   operationClickCount: 1
-  hintFormula: '6+4 '
+  hintFormula: 6+4
   hintCount: 1
