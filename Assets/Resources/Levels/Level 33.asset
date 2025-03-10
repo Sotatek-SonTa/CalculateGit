@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8550b559152722447853fa5f3e79acac, type: 3}
   m_Name: Level 33
   m_EditorClassIdentifier: 
-  requiremntResult: 630
-  turnCount: 9
-  clickCount: 3
-  operationClickCount: 2
-  hintFormula: '5^3!/5^2+5 '
+  requiremntResult: 4
+  turnCount: 8
+  clickCount: 2
+  operationClickCount: 1
+  hintFormula: 4!-5^2+5
   hintCount: 3

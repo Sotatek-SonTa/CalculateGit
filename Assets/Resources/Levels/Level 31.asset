@@ -16,5 +16,5 @@ MonoBehaviour:
   turnCount: 8
   clickCount: 1
   operationClickCount: 2
-  hintFormula: 5!/4!+3
+  hintFormula: 4!+2!-15
   hintCount: 3

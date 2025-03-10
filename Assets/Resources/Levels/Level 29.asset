@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Level 29
   m_EditorClassIdentifier: 
   requiremntResult: 13
-  turnCount: 8
-  clickCount: 1
-  operationClickCount: 3
-  hintFormula: 7!/6!+3!
-  hintCount: 2
+  turnCount: 10
+  clickCount: 2
+  operationClickCount: 1
+  hintFormula: 5*3+2^2-3!
+  hintCount: 4

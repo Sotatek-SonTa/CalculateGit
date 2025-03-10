@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8550b559152722447853fa5f3e79acac, type: 3}
   m_Name: Level 25
   m_EditorClassIdentifier: 
-  requiremntResult: 19
-  turnCount: 7
+  requiremntResult: -8
+  turnCount: 8
   clickCount: 1
   operationClickCount: 2
-  hintFormula: 7!/6!+12
+  hintFormula: 3!+2-4^2
   hintCount: 2

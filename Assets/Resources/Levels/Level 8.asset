@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8550b559152722447853fa5f3e79acac, type: 3}
   m_Name: Level 8
   m_EditorClassIdentifier: 
-  requiremntResult: 169
-  turnCount: 8
+  requiremntResult: 29
+  turnCount: 7
   clickCount: 3
   operationClickCount: 2
-  hintFormula: '5^2+12^2 '
+  hintFormula: 5^2+2^2
   hintCount: 2

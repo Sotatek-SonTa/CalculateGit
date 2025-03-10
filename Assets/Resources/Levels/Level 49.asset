@@ -17,4 +17,4 @@ MonoBehaviour:
   clickCount: 2
   operationClickCount: 2
   hintFormula: 9^2/3^2-3!
-  hintCount: 2
+  hintCount: 4

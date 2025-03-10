@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CalculateLevelManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
@@ -28,9 +29,16 @@ namespace CalculateUIManager
         public Button nextLevel;
         public Button retry;
         public Button hintButton;
+        [Header("Level title")]
         public TextMeshProUGUI levelTitle;
+        [Header("Hint")]
         public TextMeshProUGUI hintDisplay;
         public TextMeshProUGUI hintCount;
+        [Header("RequirementBar")]
+        [SerializeField] private TextMeshProUGUI requiremntResult;
+        [SerializeField] private TextMeshProUGUI turnLeft;
+
+
         public void SetActiveWinUI()
         {
             winLoseUI.SetActive(true);
@@ -58,6 +66,16 @@ namespace CalculateUIManager
         {
             hintDisplay.text = "";
         }
+        public void SetUpUI(LevelSO currentLevel)
+        {
+            requiremntResult.text = LevelManager.instance.CalculateRequirementResult(currentLevel.hintFormula).ToString();
+            levelTitle.text = currentLevel.name;
+            hintCount.text = currentLevel.hintCount.ToString();
+            turnLeft.text = (currentLevel.hintFormula.Length - LevelManager.instance.visblaeOperators).ToString();
+        }
+        public void UpdateDisplay(int turnCount)
+        {
+            turnLeft.text = turnCount.ToString();
+        }
     }
-
 }
