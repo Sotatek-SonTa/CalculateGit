@@ -217,10 +217,7 @@ namespace CalculateLevelManager
             {
                 string processedExpression = SolvePowerExpression(SolveFactorialExpression(expression));
                 object result = new System.Data.DataTable().Compute(processedExpression, null);
-                if (double.TryParse(result.ToString(), out double finalResult))
-                {
-                    return finalResult;
-                }
+                return Convert.ToDouble(result);
             }
             catch (Exception ex)
             {
@@ -236,18 +233,23 @@ namespace CalculateLevelManager
             {
                 string current = segments[i];
 
-                // Bỏ qua phần trống "<sprite name=\"blank\">"
-                if (current == "<sprite name=\"blank\">")
-                    continue;
+                if (current == "<sprite name=\"blank\">") continue;
 
-                // Kiểm tra nếu là toán tử nhưng trước hoặc sau nó không có số -> bỏ qua
-                if ("+-*/^!".Contains(current))
+                if (current == "!" && i > 0 && segments[i - 1] != "<sprite name=\"blank\">")
                 {
-                    bool hasLeftOperand = (i > 0 && segments[i - 1] != "<sprite name=\"blank\">" && !" +-*/^!".Contains(segments[i - 1]));
-                    bool hasRightOperand = (i < segments.Count - 1 && segments[i + 1] != "<sprite name=\"blank\">" && !" +-*/^!".Contains(segments[i + 1]));
+                    expression.Append(current);
+                    continue;
+                }
+                if ("+-*/^".Contains(current))
+                {
+                    bool hasLeftOperand = (i > 0 && segments[i - 1] != "<sprite name=\"blank\">" && !" +-*/^".Contains(segments[i - 1]));
+                    bool hasRightOperand = (i < segments.Count - 1 && segments[i + 1] != "<sprite name=\"blank\">" && !" +-*/^".Contains(segments[i + 1]));
 
-                    if (!hasLeftOperand || !hasRightOperand)
-                        continue; // Bỏ qua toán tử này vì không hợp lệ
+                    if (hasLeftOperand && hasRightOperand)
+                    {
+                        expression.Append(current);
+                    }
+                    continue;
                 }
 
                 expression.Append(current);

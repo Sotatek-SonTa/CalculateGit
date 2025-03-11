@@ -65,13 +65,11 @@ namespace CalculateGameplayManager
 
             string updatedExpression = levelManager.BuildExpression(levelManager.formulaSegments);
 
-
             if (!string.IsNullOrEmpty(updatedExpression))
             {
                 double? result = levelManager.EvaluateExpression(updatedExpression);
                 if (result.HasValue)
                 {
-                    Debug.Log($"Kết quả sau khi nhập: {result.Value}");
                     uIManager.UpdateCurrentResult(result.Value);
                 }
             }
