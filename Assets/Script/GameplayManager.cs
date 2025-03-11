@@ -55,13 +55,26 @@ namespace CalculateGameplayManager
             if (turnCount <= 0) return;
             int index = levelManager.formulaSegments.IndexOf("<sprite name=\"blank\">");
             if (index == -1) return;
-
             calculateSoundManager.PlaySound(CalculateSoundName.CLICK, 0.3f);
+
             levelManager.formulaSegments[index] = input;
             levelManager.generatedTexts[index].text = input;
             turnCount--;
             uIManager.UpdateDisplay(turnCount);
+            buttonPrefab.StartVFX();
 
+            string updatedExpression = levelManager.BuildExpression(levelManager.formulaSegments);
+
+
+            if (!string.IsNullOrEmpty(updatedExpression))
+            {
+                double? result = levelManager.EvaluateExpression(updatedExpression);
+                if (result.HasValue)
+                {
+                    Debug.Log($"Kết quả sau khi nhập: {result.Value}");
+                    uIManager.UpdateCurrentResult(result.Value);
+                }
+            }
             if (turnCount == 0)
             {
                 levelManager.FinalResult();
@@ -75,7 +88,6 @@ namespace CalculateGameplayManager
             {
                 CountClickTime(buttonClickCounts, levelManager.currentLevel.clickCount);
             }
-            buttonPrefab.StartVFX();
         }
         public void CountClickTime(Dictionary<Button, int> saveClick, int clickCount)
         {
@@ -112,6 +124,7 @@ namespace CalculateGameplayManager
             uIManager.SetUpUI(levelManager.currentLevel);
             ResetHint();
             ResetDictionary();
+            uIManager.SetBlankForCurrentResult();
             uIManager.SetInteractable();
             uIManager.ResetActive();
         }

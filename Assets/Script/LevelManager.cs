@@ -8,6 +8,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using CalculateGameSoundManager;
+using System.Text;
 
 namespace CalculateLevelManager
 {
@@ -193,7 +194,7 @@ namespace CalculateLevelManager
                 string processedExpression = SolvePowerExpression(SolveFactorialExpression(currentLevel.hintFormula));
                 object result = new System.Data.DataTable().Compute(processedExpression, null);
 
-        
+
                 if (double.TryParse(result.ToString(), out double finalResult))
                 {
                     return finalResult;
@@ -209,6 +210,50 @@ namespace CalculateLevelManager
                 Debug.LogError("Lỗi tính toán: " + ex.Message);
                 return double.NaN;
             }
+        }
+        public double? EvaluateExpression(string expression)
+        {
+            try
+            {
+                string processedExpression = SolvePowerExpression(SolveFactorialExpression(expression));
+                object result = new System.Data.DataTable().Compute(processedExpression, null);
+                if (double.TryParse(result.ToString(), out double finalResult))
+                {
+                    return finalResult;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Lỗi khi tính toán biểu thức: {ex.Message}");
+            }
+            return null;
+        }
+        public string BuildExpression(List<string> segments)
+        {
+            StringBuilder expression = new StringBuilder();
+
+            for (int i = 0; i < segments.Count; i++)
+            {
+                string current = segments[i];
+
+                // Bỏ qua phần trống "<sprite name=\"blank\">"
+                if (current == "<sprite name=\"blank\">")
+                    continue;
+
+                // Kiểm tra nếu là toán tử nhưng trước hoặc sau nó không có số -> bỏ qua
+                if ("+-*/^!".Contains(current))
+                {
+                    bool hasLeftOperand = (i > 0 && segments[i - 1] != "<sprite name=\"blank\">" && !" +-*/^!".Contains(segments[i - 1]));
+                    bool hasRightOperand = (i < segments.Count - 1 && segments[i + 1] != "<sprite name=\"blank\">" && !" +-*/^!".Contains(segments[i + 1]));
+
+                    if (!hasLeftOperand || !hasRightOperand)
+                        continue; // Bỏ qua toán tử này vì không hợp lệ
+                }
+
+                expression.Append(current);
+            }
+
+            return expression.ToString();
         }
     }
 }

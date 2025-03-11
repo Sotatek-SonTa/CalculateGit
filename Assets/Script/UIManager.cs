@@ -37,6 +37,7 @@ namespace CalculateUIManager
         [Header("RequirementBar")]
         [SerializeField] private TextMeshProUGUI requiremntResult;
         [SerializeField] private TextMeshProUGUI turnLeft;
+        [SerializeField] public TextMeshProUGUI currentResult;
 
 
         public void SetActiveWinUI()
@@ -76,6 +77,14 @@ namespace CalculateUIManager
         public void UpdateDisplay(int turnCount)
         {
             turnLeft.text = turnCount.ToString();
+        }
+        public void UpdateCurrentResult(double result)
+        {
+            currentResult.text = result.ToString();
+        }
+        public void SetBlankForCurrentResult()
+        {
+            currentResult.text = "0";
         }
     }
 }

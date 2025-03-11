@@ -27,7 +27,7 @@ public class ButtonPrefab : MonoBehaviour
     IEnumerator VFXduration()
     {
         particleSystem.gameObject.SetActive(true);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         particleSystem.gameObject.SetActive(false);
     }
 }
