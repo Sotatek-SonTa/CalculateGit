@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8550b559152722447853fa5f3e79acac, type: 3}
   m_Name: Level 13
   m_EditorClassIdentifier: 
-  requiremntResult: 27
-  turnCount: 4
-  clickCount: 2
+  clickCount: 1
   operationClickCount: 1
-  hintFormula: 4!+3
-  hintCount: 3
+  hintFormula: 14^2+5
+  hintCount: 2
+  operationHideIndex: 00000000

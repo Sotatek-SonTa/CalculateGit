@@ -9,11 +9,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8550b559152722447853fa5f3e79acac, type: 3}
-  m_Name: Level 1
+  m_Script: {fileID: 11500000, guid: f054d0c1a9f0fec4bb814d162b833c17, type: 3}
+  m_Name: Expert
   m_EditorClassIdentifier: 
-  clickCount: 1
-  operationClickCount: 1
-  hintFormula: 4+3
-  hintCount: 1
-  operationHideIndex: 
+  minLength: 4
+  maxLength: 8
+  diffculty: 0
+  number:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - '!'
+  operation:
+  - +
+  - '-'
+  - '*'
+  - /
+  - ^

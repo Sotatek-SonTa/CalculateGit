@@ -9,5 +9,6 @@ public class LevelSO : ScriptableObject {
     public int operationClickCount;
     public string hintFormula;
     public int hintCount;
+    public List<int> operationHideIndex;
 }
 

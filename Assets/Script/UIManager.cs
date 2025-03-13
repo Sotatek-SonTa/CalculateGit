@@ -36,19 +36,22 @@ namespace CalculateUIManager
         public TextMeshProUGUI hintCount;
         [Header("RequirementBar")]
         [SerializeField] private TextMeshProUGUI requiremntResult;
-        [SerializeField] private TextMeshProUGUI turnLeft;
-        [SerializeField] public TextMeshProUGUI currentResult;
-
-
+        [SerializeField] private TextMeshProUGUI currentResult;
+        [Header("LoseUIComponent")]
+        [SerializeField] private TextMeshProUGUI resultText;
+        [Header("RepeatUI")]
+        [SerializeField] private TextMeshProUGUI numberRepeatCount;
+        [SerializeField] private TextMeshProUGUI operationRepeatCount;
         public void SetActiveWinUI()
         {
             winLoseUI.SetActive(true);
             winUI.SetActive(true);
         }
-        public void SetActiveLoseUI()
+        public void SetActiveLoseUI(string result)
         {
             winLoseUI.SetActive(true);
             LoseUI.SetActive(true);
+            UpdateResult(result);
         }
         public void ResetActive()
         {
@@ -72,11 +75,7 @@ namespace CalculateUIManager
             requiremntResult.text = LevelManager.instance.CalculateRequirementResult(currentLevel.hintFormula).ToString();
             levelTitle.text = currentLevel.name;
             hintCount.text = currentLevel.hintCount.ToString();
-            turnLeft.text = (currentLevel.hintFormula.Length - LevelManager.instance.visblaeOperators).ToString();
-        }
-        public void UpdateDisplay(int turnCount)
-        {
-            turnLeft.text = turnCount.ToString();
+            SetUpRepeatAllowance(currentLevel.clickCount,currentLevel.operationClickCount);
         }
         public void UpdateCurrentResult(double result)
         {
@@ -85,6 +84,15 @@ namespace CalculateUIManager
         public void SetBlankForCurrentResult()
         {
             currentResult.text = "0";
+        }
+        public void UpdateResult(string result)
+        {
+            resultText.text = $"Result: <color=#FF0000>{result}</color>";
+        }
+        public void SetUpRepeatAllowance(int number, int operation)
+        {
+            numberRepeatCount.text = number.ToString();
+            operationRepeatCount.text = operation.ToString();
         }
     }
 }

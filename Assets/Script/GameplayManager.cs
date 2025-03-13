@@ -28,7 +28,7 @@ namespace CalculateGameplayManager
             LoadManager();
             levelManager.LoadLevel(indexLevel);
             AddListener();
-            levelManager.GenerateTextFromHint(levelManager.currentLevel.hintFormula);
+            levelManager.GenerateTextFromHint(levelManager.currentLevel.hintFormula,levelManager.currentLevel);
             LoadData();
             uIManager.SetUpUI(levelManager.currentLevel);
             ButtonPrefab.OnButtonPressed += HandleButtonPress;
@@ -60,7 +60,6 @@ namespace CalculateGameplayManager
             levelManager.formulaSegments[index] = input;
             levelManager.generatedTexts[index].text = input;
             turnCount--;
-            uIManager.UpdateDisplay(turnCount);
             buttonPrefab.StartVFX();
 
             string updatedExpression = levelManager.BuildExpression(levelManager.formulaSegments);
@@ -116,7 +115,7 @@ namespace CalculateGameplayManager
         public void ResetLevel()
         {
             levelManager.LoadLevel(indexLevel);
-            levelManager.GenerateTextFromHint(levelManager.currentLevel.hintFormula);
+            levelManager.GenerateTextFromHint(levelManager.currentLevel.hintFormula,levelManager.currentLevel);
             turnCount = levelManager.currentLevel.hintFormula.Length - levelManager.visblaeOperators;
             calculateSoundManager.PlaySound(CalculateSoundName.RETRY, 0.2f);
             uIManager.SetUpUI(levelManager.currentLevel);
@@ -144,6 +143,7 @@ namespace CalculateGameplayManager
             hintClickCount = levelManager.currentLevel.hintCount;
             uIManager.hintCount.text = hintClickCount.ToString();
             hintIndex = 0;
+            uIManager.hintButton.interactable =true;
             uIManager.ResetHintDisPlay();
         }
         private void ResetDictionary()

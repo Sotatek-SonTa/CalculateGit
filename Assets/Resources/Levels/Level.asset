@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8550b559152722447853fa5f3e79acac, type: 3}
-  m_Name: Level 1
+  m_Name: Level
   m_EditorClassIdentifier: 
-  clickCount: 1
-  operationClickCount: 1
-  hintFormula: 4+3
-  hintCount: 1
+  clickCount: 0
+  operationClickCount: 0
+  hintFormula: 
+  hintCount: 0
   operationHideIndex: 

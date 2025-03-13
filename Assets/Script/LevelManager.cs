@@ -17,9 +17,10 @@ namespace CalculateLevelManager
         public static LevelManager instance { get; private set; }
 
         [SerializeField] private Transform parentTransform;
-        [SerializeField] public TextMeshProUGUI textPrefab;
+        [SerializeField] public TMPrefab textPrefab;
         [SerializeField] public List<string> formulaSegments;
         [SerializeField] public List<TextMeshProUGUI> generatedTexts;
+        [SerializeField] public List<TMPrefab> tMPrefabs;
         [SerializeField] public string currentExpression;
         [SerializeField] CalculateSoundManager calculateSoundManager;
         public UIManager uIManager;
@@ -82,73 +83,52 @@ namespace CalculateLevelManager
             }
             return result;
         }
-        public void GenerateTextWithResult(string expression, double result)
-        {
-            foreach (var item in generatedTexts)
-            {
-                Destroy(item.gameObject);
-            }
-            generatedTexts.Clear();
-            formulaSegments.Clear();
-            foreach (char c in expression)
-            {
-                GameObject newTextObject = Instantiate(textPrefab.gameObject, parentTransform);
-                TextMeshProUGUI newText = newTextObject.GetComponent<TextMeshProUGUI>();
-                newText.text = c.ToString();
-                generatedTexts.Add(newText);
-                formulaSegments.Add(newText.text);
-            }
-            GameObject equalTextObject = Instantiate(textPrefab.gameObject, parentTransform);
-            TextMeshProUGUI equalText = equalTextObject.GetComponent<TextMeshProUGUI>();
-            equalText.text = "=";
-            generatedTexts.Add(equalText);
-            formulaSegments.Add(equalText.text);
-
-            GameObject resultTextObject = Instantiate(textPrefab.gameObject, parentTransform);
-            TextMeshProUGUI resultText = resultTextObject.GetComponent<TextMeshProUGUI>();
-            resultText.text = result.ToString();
-            generatedTexts.Add(resultText);
-            formulaSegments.Add(resultText.text);
-        }
-        public void GenerateTextFromHint(string hintFormula)
+        public void GenerateTextFromHint(string hintFormula, LevelSO levelSO)
         {
             foreach (var text in generatedTexts)
             {
                 Destroy(text.gameObject);
             }
+            foreach (var item in tMPrefabs)
+            {
+                Destroy(item.gameObject);
+            }
             generatedTexts.Clear();
             formulaSegments.Clear();
-            int hideCount = 0;
+            tMPrefabs.Clear();
+
             visblaeOperators = 0;
+
+            int operatorIndex = 0;
             for (int i = 0; i < hintFormula.Length; i++)
             {
                 char c = hintFormula[i];
-                GameObject newTextObject = Instantiate(textPrefab.gameObject, parentTransform);
-                TextMeshProUGUI newText = newTextObject.GetComponent<TextMeshProUGUI>();
+                TMPrefab newTextObject = Instantiate(textPrefab, parentTransform);
 
                 if (char.IsDigit(c))
                 {
-                    newText.text = "<sprite name=\"blank\">";
+                    newTextObject.textMesh.text = "<sprite name=\"blank\">";
                 }
                 else if ("+-*/^!".Contains(c))
                 {
-                    if (hideCount < 2)
+                    if (levelSO.operationHideIndex.Contains(operatorIndex))
                     {
-                        newText.text = "<sprite name=\"blank\">";
-                        hideCount++;
+                        newTextObject.textMesh.text = "<sprite name=\"blank\">";
                     }
                     else
                     {
-                        newText.text = c.ToString();
+                        newTextObject.textMesh.text = c.ToString();
                         visblaeOperators++;
                     }
+                    operatorIndex++;
                 }
                 else
                 {
-                    newText.text = c.ToString();
+                    newTextObject.textMesh.text = c.ToString();
                 }
-                formulaSegments.Add(newText.text);
-                generatedTexts.Add(newText);
+                tMPrefabs.Add(newTextObject);
+                formulaSegments.Add(newTextObject.textMesh.text);
+                generatedTexts.Add(newTextObject.textMesh);
             }
         }
         public void FinalResult()
@@ -162,7 +142,6 @@ namespace CalculateLevelManager
                     object result = new System.Data.DataTable().Compute(processedExpression, null);
                     if (double.TryParse(result.ToString(), out double finalResult))
                     {
-                        GenerateTextWithResult(currentExpression, finalResult);
                         if (finalResult == CalculateRequirementResult(currentLevel.hintFormula))
                         {
                             UIManager.instance.SetActiveWinUI();
@@ -170,20 +149,20 @@ namespace CalculateLevelManager
                         }
                         else
                         {
-                            UIManager.instance.SetActiveLoseUI();
+                            UIManager.instance.SetActiveLoseUI(finalResult.ToString());
                             CalculateSoundManager.instance.PlaySound(CalculateSoundName.LOSE, 0.2f);
                         }
                     }
                     else
                     {
                         CalculateSoundManager.instance.PlaySound(CalculateSoundName.LOSE, 0.2f);
-                        UIManager.instance.SetActiveLoseUI();
+                        UIManager.instance.SetActiveLoseUI(finalResult.ToString());
                     }
                 }
                 catch (Exception)
                 {
                     CalculateSoundManager.instance.PlaySound(CalculateSoundName.LOSE, 0.2f);
-                    UIManager.instance.SetActiveLoseUI();
+                    UIManager.instance.SetActiveLoseUI("No Result");
                 }
             }
         }
@@ -254,7 +233,6 @@ namespace CalculateLevelManager
 
                 expression.Append(current);
             }
-
             return expression.ToString();
         }
     }
