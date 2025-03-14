@@ -9,6 +9,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using CalculateGameSoundManager;
 using System.Text;
+using CalculateGameplayManager;
 
 namespace CalculateLevelManager
 {
@@ -23,8 +24,10 @@ namespace CalculateLevelManager
         [SerializeField] public List<TMPrefab> tMPrefabs;
         [SerializeField] public string currentExpression;
         [SerializeField] CalculateSoundManager calculateSoundManager;
+        public int indexLevel = 1;
         public UIManager uIManager;
         public int visblaeOperators;
+        public string automaticFormula;
         private void Awake()
         {
             if (instance == null)
@@ -85,20 +88,7 @@ namespace CalculateLevelManager
         }
         public void GenerateTextFromHint(string hintFormula, LevelSO levelSO)
         {
-            foreach (var text in generatedTexts)
-            {
-                Destroy(text.gameObject);
-            }
-            foreach (var item in tMPrefabs)
-            {
-                Destroy(item.gameObject);
-            }
-            generatedTexts.Clear();
-            formulaSegments.Clear();
-            tMPrefabs.Clear();
-
-            visblaeOperators = 0;
-
+            ResetList();
             int operatorIndex = 0;
             for (int i = 0; i < hintFormula.Length; i++)
             {
@@ -131,6 +121,34 @@ namespace CalculateLevelManager
                 generatedTexts.Add(newTextObject.textMesh);
             }
         }
+        public void GenerateTextFromAutomatic(string formula, DifficultyConfig difficultyConfig)
+        {
+            ResetList();
+            for (int i = 0; i < formula.Length; i++)
+            {
+                char c = formula[i];
+                TMPrefab newTextObject = Instantiate(textPrefab, parentTransform);
+                if (char.IsDigit(c))
+                {
+                    newTextObject.textMesh.text = "<sprite name=\"blank\">";
+                }
+                else if ("+-*/^!".Contains(c))
+                {
+                    if (UnityEngine.Random.value < difficultyConfig.hideOperatosChance)
+                    {
+                        newTextObject.textMesh.text = "<sprite name=\"blank\">";
+                    }
+                    else
+                    {
+                        newTextObject.textMesh.text = c.ToString();
+                        visblaeOperators++;
+                    }
+                }
+                tMPrefabs.Add(newTextObject);
+                formulaSegments.Add(newTextObject.textMesh.text);
+                generatedTexts.Add(newTextObject.textMesh);
+            }
+        }
         public void FinalResult()
         {
             currentExpression = string.Join("", formulaSegments);
@@ -142,7 +160,7 @@ namespace CalculateLevelManager
                     object result = new System.Data.DataTable().Compute(processedExpression, null);
                     if (double.TryParse(result.ToString(), out double finalResult))
                     {
-                        if (finalResult == CalculateRequirementResult(currentLevel.hintFormula))
+                        if (finalResult == CalculateRequirementResult(indexLevel < 100 ? currentLevel.hintFormula : automaticFormula))
                         {
                             UIManager.instance.SetActiveWinUI();
                             CalculateSoundManager.instance.PlaySound(CalculateSoundName.WIN, 0.2f);
@@ -170,7 +188,7 @@ namespace CalculateLevelManager
         {
             try
             {
-                string processedExpression = SolvePowerExpression(SolveFactorialExpression(currentLevel.hintFormula));
+                string processedExpression = SolvePowerExpression(SolveFactorialExpression(hintFormula));
                 object result = new System.Data.DataTable().Compute(processedExpression, null);
 
 
@@ -224,16 +242,183 @@ namespace CalculateLevelManager
                     bool hasLeftOperand = (i > 0 && segments[i - 1] != "<sprite name=\"blank\">" && !" +-*/^".Contains(segments[i - 1]));
                     bool hasRightOperand = (i < segments.Count - 1 && segments[i + 1] != "<sprite name=\"blank\">" && !" +-*/^".Contains(segments[i + 1]));
 
+                    if ((current == "+" || current == "-") && i == 0 && hasRightOperand)
+                    {
+                        expression.Append(current);
+                        continue;
+                    }
                     if (hasLeftOperand && hasRightOperand)
                     {
                         expression.Append(current);
                     }
                     continue;
                 }
-
                 expression.Append(current);
             }
             return expression.ToString();
+        }
+        public string AutomaticGenerateLevel(DifficultyConfig difficultyConfig)
+        {
+            StringBuilder formula = new StringBuilder();
+            int length = UnityEngine.Random.Range(difficultyConfig.minLength, difficultyConfig.maxLength);
+            List<string> number = difficultyConfig.number;
+            List<string> operators = difficultyConfig.operation;
+            bool isExpert = difficultyConfig.diffculty == Diffculty.Expert;
+
+            int numberCount = 0;
+            bool lastWasOperator = false;
+            bool lastWasFactorial = false;
+
+            for (int i = 0; i < length; i++)
+            {
+                // Xử lý vị trí cuối cùng
+                if (i == length - 1)
+                {
+                    AppnedLastCharcater(formula, isExpert, number);
+                }
+                // Không cho phép '!' ở vị trí áp chót
+                else if (i == length - 2)
+                {
+                    ApppendSecondLastCharacaters(formula, ref numberCount, ref lastWasOperator, ref lastWasFactorial, number, operators);
+                }
+                // Nếu đã có 2 số liên tiếp → thêm toán tử (hoặc '!' nếu là Expert)
+                else if (numberCount == 2)
+                {
+                    AppendFactorialOperator(formula, ref lastWasOperator, ref lastWasFactorial, number, operators);
+                    numberCount = 0;
+                }
+                // Sau toán tử, bắt buộc phải là số
+                else if (lastWasOperator || lastWasFactorial)
+                {
+                    AppendAfterOperatorOrFactorial(formula, ref numberCount, ref lastWasOperator, ref lastWasFactorial, number, operators);
+                }
+                // Sau "!" bắt buộc là toán tử
+                else
+                {
+                    if (i == 0)
+                    {
+                        formula.Append(RandomChoice(number));
+                        numberCount++;
+                    }
+                    else
+                    {
+                        AppendNumberOrOperator(formula, ref numberCount, ref lastWasOperator, ref lastWasFactorial, number, operators);
+                    }
+                }
+            }
+            return formula.ToString();
+        }
+        #region HandleSpecialCondition
+        private void AppnedLastCharcater(StringBuilder fomula, bool isExpert, List<string> number)
+        {
+            if (isExpert && char.IsDigit(fomula[fomula.Length - 1]) && UnityEngine.Random.value < 0.1f)
+            {
+                fomula.Append("!");
+            }
+            else
+            {
+                fomula.Append(RandomChoice(number));
+            }
+        }
+        private void AppendNumberOrOperator(StringBuilder formula, ref int numberCount, ref bool lastWasOperator, ref bool lastWasFactorial, List<string> number, List<string> operators)
+        {
+            if (UnityEngine.Random.value < 0.4f)
+            {
+                formula.Append(RandomChoice(number));
+                numberCount++;
+            }
+            else
+            {
+                if (UnityEngine.Random.value < 0.2f)
+                {
+                    formula.Append("!");
+                    numberCount = 0;
+                    lastWasFactorial = true;
+                }
+                else
+                {
+                    formula.Append(RandomChoice(operators));
+                    numberCount = 0;
+                    lastWasOperator = true;
+                }
+            }
+        }
+        private void ApppendSecondLastCharacaters(StringBuilder formula, ref int numberCount, ref bool lastWasOperator, ref bool lastWasFactorial, List<string> number, List<string> operators)
+        {
+            if (formula.Length > 0 && formula[formula.Length - 1] == '!')
+            {
+                formula.Append(RandomChoice(operators)); // Sau '!' luôn phải là toán tử
+                lastWasOperator = true;
+                lastWasFactorial = false;
+            }
+            else
+            {
+                if (numberCount < 2)
+                {
+                    formula.Append(RandomChoice(number));
+                    numberCount++;
+                    lastWasOperator = false;
+                    lastWasFactorial = false;
+                }
+                else
+                {
+                    formula.Append(RandomChoice(operators));
+                    lastWasOperator = true;
+                    lastWasFactorial = false;
+                }
+            }
+        }
+        private void AppendAfterOperatorOrFactorial(StringBuilder formula, ref int numberCount, ref bool lastWasOperator, ref bool lastWasFactorial, List<string> number, List<string> operators)
+        {
+            if (lastWasOperator)
+            {
+                formula.Append(RandomChoice(number));
+                numberCount++;
+                lastWasOperator = false;
+                lastWasFactorial = false;
+            }
+            // Sau "!" bắt buộc là toán tử
+            else if (lastWasFactorial)
+            {
+                formula.Append(RandomChoice(operators));
+                lastWasOperator = true;
+                lastWasFactorial = false;
+            }
+        }
+        private void AppendFactorialOperator(StringBuilder formula, ref bool lastWasOperator, ref bool lastWasFactorial, List<string> number, List<string> operators)
+        {
+
+            if (UnityEngine.Random.value < 0.2f)
+            {
+                formula.Append("!");
+                lastWasFactorial = true;
+            }
+            else
+            {
+                formula.Append(RandomChoice(operators));
+                lastWasOperator = true;
+            }
+
+        }
+        #endregion
+        private static string RandomChoice(List<string> list)
+        {
+            return list[UnityEngine.Random.Range(0, list.Count)];
+        }
+        private void ResetList()
+        {
+            foreach (var text in generatedTexts)
+            {
+                Destroy(text.gameObject);
+            }
+            foreach (var item in tMPrefabs)
+            {
+                Destroy(item.gameObject);
+            }
+            formulaSegments.Clear();
+            generatedTexts.Clear();
+            tMPrefabs.Clear();
+            visblaeOperators = 0;
         }
     }
 }

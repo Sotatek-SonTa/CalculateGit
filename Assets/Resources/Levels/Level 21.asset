@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8550b559152722447853fa5f3e79acac, type: 3}
   m_Name: Level 21
   m_EditorClassIdentifier: 
-  clickCount: 1
-  operationClickCount: 1
+  clickCount: 3
+  operationClickCount: 2
   hintFormula: 654+318
   hintCount: 1
   operationHideIndex: 00000000

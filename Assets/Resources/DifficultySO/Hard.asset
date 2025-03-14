@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f054d0c1a9f0fec4bb814d162b833c17, type: 3}
   m_Name: Hard
   m_EditorClassIdentifier: 
-  minLength: 4
+  minLength: 6
   maxLength: 8
-  diffculty: 0
+  diffculty: 2
   number:
   - 1
   - 2
@@ -31,3 +31,4 @@ MonoBehaviour:
   - '*'
   - /
   - ^
+  hideOperatosChance: 0.6

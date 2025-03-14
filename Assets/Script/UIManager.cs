@@ -77,6 +77,11 @@ namespace CalculateUIManager
             hintCount.text = currentLevel.hintCount.ToString();
             SetUpRepeatAllowance(currentLevel.clickCount,currentLevel.operationClickCount);
         }
+        public void SetUpUIForAutomatic(string formula, int indexLevel)
+        {
+            requiremntResult.text = LevelManager.instance.CalculateRequirementResult(formula).ToString();
+            levelTitle.text = "Level " + indexLevel.ToString();
+        }
         public void UpdateCurrentResult(double result)
         {
             currentResult.text = result.ToString();

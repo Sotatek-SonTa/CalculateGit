@@ -29,4 +29,4 @@ MonoBehaviour:
   - +
   - '-'
   - '*'
-  - /
+  hideOperatosChance: 0.3

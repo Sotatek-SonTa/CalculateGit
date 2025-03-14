@@ -910,8 +910,10 @@ MonoBehaviour:
   tMPrefabs: []
   currentExpression: 
   calculateSoundManager: {fileID: 0}
-  uIManager: {fileID: 0}
+  indexLevel: 101
+  uIManager: {fileID: 1972671180}
   visblaeOperators: 0
+  automaticFormula: 
   currentLevel: {fileID: 0}
 --- !u!1001 &264293999
 PrefabInstance:
@@ -3146,11 +3148,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1417854d2498844e87c8414031328b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnCount: 6
-  indexLevel: 1
+  turnCount: 101
   levelManager: {fileID: 0}
-  uIManager: {fileID: 0}
+  uIManager: {fileID: 1972671180}
   calculateSoundManager: {fileID: 0}
+  gameConfig: {fileID: 1050534405}
 --- !u!1 &773063454
 GameObject:
   m_ObjectHideFlags: 0
@@ -4707,6 +4709,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1050534404}
+  - component: {fileID: 1050534405}
   m_Layer: 0
   m_Name: GameConfig
   m_TagString: Untagged
@@ -4729,6 +4732,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1044548455}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1050534405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1050534403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53712e340632c8c4abaa1446617ef242, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  difficultyConfigs:
+  - {fileID: 11400000, guid: b2bda6d33cff2564698409640758c24f, type: 2}
+  - {fileID: 11400000, guid: a2f5a1931c171054ea626e76dfe371fb, type: 2}
+  - {fileID: 11400000, guid: c4aee7e3eeb6c674ab1302597d0b0e18, type: 2}
+  - {fileID: 11400000, guid: 6f2d3d3a22ea8ef4b9cb134e71e01f54, type: 2}
 --- !u!1 &1064970312
 GameObject:
   m_ObjectHideFlags: 0

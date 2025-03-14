@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f054d0c1a9f0fec4bb814d162b833c17, type: 3}
   m_Name: Expert
   m_EditorClassIdentifier: 
-  minLength: 4
-  maxLength: 8
-  diffculty: 0
+  minLength: 6
+  maxLength: 10
+  diffculty: 4
   number:
   - 1
   - 2
@@ -25,10 +25,10 @@ MonoBehaviour:
   - 7
   - 8
   - 9
-  - '!'
   operation:
   - +
   - '-'
   - '*'
   - /
   - ^
+  hideOperatosChance: 0.8

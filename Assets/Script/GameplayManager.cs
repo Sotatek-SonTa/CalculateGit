@@ -14,7 +14,6 @@ namespace CalculateGameplayManager
     public class GameplayManager : MonoBehaviour
     {
         [SerializeField] int turnCount;
-        public int indexLevel = 1;
         public LevelManager levelManager;
         public UIManager uIManager;
         public CalculateSoundManager calculateSoundManager;
@@ -23,26 +22,44 @@ namespace CalculateGameplayManager
         private int hintIndex = 0;
         private int hintClickCount = 0;
         public static float hintCoolDown = 10f;
+        [SerializeField] private DifficultyConfig randomDifficulty;
+        public GameConfig gameConfig;
+
         void Start()
         {
             LoadManager();
-            levelManager.LoadLevel(indexLevel);
+            levelManager.LoadLevel(levelManager.indexLevel);
             AddListener();
-            levelManager.GenerateTextFromHint(levelManager.currentLevel.hintFormula,levelManager.currentLevel);
-            LoadData();
-            uIManager.SetUpUI(levelManager.currentLevel);
             ButtonPrefab.OnButtonPressed += HandleButtonPress;
+            if (levelManager.indexLevel <= 100)
+            {
+                levelManager.GenerateTextFromHint(levelManager.currentLevel.hintFormula, levelManager.currentLevel);
+                LoadData();
+                uIManager.SetUpUI(levelManager.currentLevel);
+            }
+            else
+            {
+                SetAutoMaticLevel();
+            }
         }
         void LoadManager()
         {
             levelManager = LevelManager.instance;
             uIManager = UIManager.instance;
             calculateSoundManager = CalculateSoundManager.instance;
+            gameConfig = GameConfig.instance;
         }
         void LoadData()
         {
-            hintClickCount = levelManager.currentLevel.hintCount;
-            turnCount = levelManager.currentLevel.hintFormula.Length - levelManager.visblaeOperators;
+            if (levelManager.indexLevel <= 100)
+            {
+                hintClickCount = levelManager.currentLevel.hintCount;
+                turnCount = levelManager.currentLevel.hintFormula.Length - levelManager.visblaeOperators;
+            }
+            else
+            {
+                turnCount = levelManager.automaticFormula.Length - levelManager.visblaeOperators;
+            }
         }
         void AddListener()
         {
@@ -54,16 +71,13 @@ namespace CalculateGameplayManager
         {
             if (turnCount <= 0) return;
             int index = levelManager.formulaSegments.IndexOf("<sprite name=\"blank\">");
-            if (index == -1) return;
             calculateSoundManager.PlaySound(CalculateSoundName.CLICK, 0.3f);
 
             levelManager.formulaSegments[index] = input;
             levelManager.generatedTexts[index].text = input;
             turnCount--;
             buttonPrefab.StartVFX();
-
             string updatedExpression = levelManager.BuildExpression(levelManager.formulaSegments);
-
             if (!string.IsNullOrEmpty(updatedExpression))
             {
                 double? result = levelManager.EvaluateExpression(updatedExpression);
@@ -105,25 +119,42 @@ namespace CalculateGameplayManager
 
         public void NextLevel()
         {
-            indexLevel++;
-            ResetLevel();
+            if (levelManager.indexLevel <= 100)
+            {
+                levelManager.indexLevel++;
+                ResetLevel();
+            }
+            else
+            {
+                levelManager.indexLevel++;
+                SetAutoMaticLevel();
+            }
+
         }
         public void Retry()
         {
-            ResetLevel();
+            if (levelManager.indexLevel <= 100)
+            {
+                ResetLevel();
+            }
+            else
+            {
+                ResetAutoMaticLevel();
+            }
         }
         public void ResetLevel()
         {
-            levelManager.LoadLevel(indexLevel);
-            levelManager.GenerateTextFromHint(levelManager.currentLevel.hintFormula,levelManager.currentLevel);
-            turnCount = levelManager.currentLevel.hintFormula.Length - levelManager.visblaeOperators;
-            calculateSoundManager.PlaySound(CalculateSoundName.RETRY, 0.2f);
-            uIManager.SetUpUI(levelManager.currentLevel);
-            ResetHint();
-            ResetDictionary();
-            uIManager.SetBlankForCurrentResult();
-            uIManager.SetInteractable();
-            uIManager.ResetActive();
+            if (levelManager.indexLevel <= 100)
+            {
+                levelManager.LoadLevel(levelManager.indexLevel);
+                levelManager.GenerateTextFromHint(levelManager.currentLevel.hintFormula, levelManager.currentLevel);
+                turnCount = levelManager.currentLevel.hintFormula.Length - levelManager.visblaeOperators;
+                calculateSoundManager.PlaySound(CalculateSoundName.RETRY, 0.2f);
+                uIManager.SetUpUI(levelManager.currentLevel);
+                ResetHint();
+                ResetDictionary();
+                ResetUI();
+            }
         }
         public void ShowNextHintCharcater()
         {
@@ -143,7 +174,7 @@ namespace CalculateGameplayManager
             hintClickCount = levelManager.currentLevel.hintCount;
             uIManager.hintCount.text = hintClickCount.ToString();
             hintIndex = 0;
-            uIManager.hintButton.interactable =true;
+            uIManager.hintButton.interactable = true;
             uIManager.ResetHintDisPlay();
         }
         private void ResetDictionary()
@@ -164,6 +195,32 @@ namespace CalculateGameplayManager
                 uIManager.hintButton.interactable = false;
             }
         }
+        public void SetAutoMaticLevel()
+        {
+            randomDifficulty = gameConfig.difficultyConfigs[UnityEngine.Random.Range(0, 4)];
+            levelManager.automaticFormula = levelManager.AutomaticGenerateLevel(randomDifficulty);
+            Debug.Log(levelManager.automaticFormula);
+            levelManager.GenerateTextFromAutomatic(levelManager.automaticFormula, randomDifficulty);
+            LoadData();
+            uIManager.SetUpUIForAutomatic(levelManager.automaticFormula, levelManager.indexLevel);
+            ResetUI();
+        }
+        public void ResetAutoMaticLevel()
+        {
+            Debug.Log(levelManager.automaticFormula);
+            levelManager.GenerateTextFromAutomatic(levelManager.automaticFormula, randomDifficulty);
+            LoadData();
+            uIManager.SetUpUIForAutomatic(levelManager.automaticFormula, levelManager.indexLevel);
+            ResetUI();
+
+        }
+        public void ResetUI()
+        {
+            uIManager.SetBlankForCurrentResult();
+            uIManager.SetInteractable();
+            uIManager.ResetActive();
+        }
     }
 }
+
 
